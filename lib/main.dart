@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/models/push_up_model.dart';
+import 'package:flutter_application_1/views/splash_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'views/pose_detection_view.dart';
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
       create: (context)=> PushUpCounter(),
       child: MaterialApp(
         title: 'Material App',
-        home: Home()
+        home: SplashScreen()
      )
     );
   }
