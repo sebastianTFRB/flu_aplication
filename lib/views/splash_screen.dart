@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/views/pose_detection_view.dart';
 import 'package:lottie/lottie.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -57,12 +58,13 @@ class SplashScreen extends StatelessWidget {
               style: raisedButtonStyle ,
               onPressed: () { 
                 Navigator.push(
-                  MateraialPageRoute()
-                )
+                  context,
+                  MaterialPageRoute(builder:(_) => PoseDetectorView()),
+                );
 
               },
               child: Text('Star Now')
-            ) 
+            ), 
             SizedBox(
               height: size.height * 0.03,
             )
