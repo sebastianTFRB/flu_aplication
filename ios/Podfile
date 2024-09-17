@@ -6,7 +6,10 @@ target 'Runner' do
   use_frameworks!
 
   # Pods for Runner
-
+  pod 'camera', '~> 0.11.2'
+  pod 'google_ml_kit', '~> 0.18.0'
+  pod 'google_mlkit_translation', '~> 0.11.0'
+  
   target 'RunnerTests' do
     inherit! :search_paths
     # Pods for testing
