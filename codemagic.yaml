@@ -1,0 +1,27 @@
+workflows:
+  ios-build:
+    name: iOS Build
+    instance_type: mac_mini_m1
+
+    environment:
+      vars:
+        FLUTTER_VERSION: stable
+
+    scripts:
+      - name: Update CocoaPods
+        script: |
+          # Actualiza el repositorio de CocoaPods
+          pod repo update
+
+      - name: Install dependencies
+        script: |
+          # Instala las dependencias
+          flutter pub get
+
+      - name: Build iOS
+        script: |
+          # Construye la aplicación para iOS
+          flutter build ios --release
+
+    artifacts:
+      - build/ios/ipa/*.ipa
