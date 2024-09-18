@@ -9,18 +9,21 @@ workflows:
 
     scripts:
       - name: Update CocoaPods
-        script: |
-          # Actualiza el repositorio de CocoaPods
-          pod repo update
+        script:  
+         cd ios
+         pod repo update
+         pod install
+          
+          
 
       - name: Install dependencies
-        script: |
-          # Instala las dependencias
+        script: 
+          
           flutter pub get
 
       - name: Build iOS
-        script: |
-          # Construye la aplicación para iOS
+        script: 
+         
           flutter build ios --release
 
     artifacts:
