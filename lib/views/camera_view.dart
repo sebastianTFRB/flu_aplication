@@ -117,129 +117,139 @@ class _CameraViewState extends State<CameraView> {
   }
 
   Widget _liveFeedBody() {
-    if (_cameras.isEmpty) return Container();
-    if (_controller == null) return Container();
-    if (_controller?.value.isInitialized == false) return Container();
-    return Container(
-      color: Colors.black,
-      child: Stack(
-        fit: StackFit.expand,
-        children: <Widget>[
-          Center(
-            child: _changingCameraLens
-                ? const Center(
-                    child: Text('Changing camera lens'),
-                  )
-                : CameraPreview(
-                    _controller!,
-                    child: widget.customPaint,
+  if (_cameras.isEmpty) return Container();
+  if (_controller == null) return Container();
+  if (_controller?.value.isInitialized == false) return Container();
+  return Container(
+    color: Colors.white,
+    child: Stack(
+      fit: StackFit.expand,
+      children: <Widget>[
+        Center(
+          child: _changingCameraLens
+              ? Container(
+                  color: Colors.black54,
+                  child: const Center(
+                    child: CircularProgressIndicator(),
                   ),
+                )
+              : CameraPreview(
+                  _controller!,
+                  child: widget.customPaint,
+                ),
+        ),
+        _counterWidget(),
+        _backButton(),
+        _switchLiveCameraToggle(),
+        _detectionViewModeToggle(),
+        _zoomControl(),
+        _exposureControl(),
+      ],
+    ),
+  );
+}
+
+
+ Widget _counterWidget() {
+  final bloc = BlocProvider.of<PushUpCounter>(context);
+  return Positioned(
+    left: 0,
+    top: 50,
+    right: 0,
+    child: Container(
+      width: 70,
+      child: Column(
+        children: [
+          const Text(
+            'Counter',
+            style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold, fontSize: 14),
           ),
-          _counterWidget(),
-          _backButton(),
-          _switchLiveCameraToggle(),
-          _detectionViewModeToggle(),
-          _zoomControl(),
-          _exposureControl(),
+          Container(
+            width: 70,
+            decoration: BoxDecoration(
+              color: Colors.black54,
+              border: Border.all(color: Colors.white.withOpacity(0.4), width: 4.0),
+              borderRadius: const BorderRadius.all(Radius.circular(12)),
+            ),
+            child: Text(
+              '${bloc.counter}',
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Colors.orange,
+                fontSize: 30.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
         ],
       ),
-    );
-  }
-   Widget _counterWidget() {
-    final bloc = BlocProvider.of<PushUpCounter>(context);
-    return Positioned(
-      left: 0,
-      top: 50,
-      right: 0,
+    ),
+  );
+}
 
-      child: Container(
-        width: 70,
-        child: Column(
-          children: [
-            const Text('Counter',
-            style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold, fontSize: 14 ),
-            ),
-            Container(
-              width: 70,
-              decoration: BoxDecoration(
-                color: Colors.black54,
-                border: Border.all(color: Colors.white.withOpacity(0.4),width: 4.0),
-                borderRadius: const BorderRadius.all(Radius.circular(12))
-              ),
-              child: Text('${bloc.counter}',
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 30.0,
-                  fontWeight: FontWeight.bold
-                ),
-              ),
-            ),
-          ],
-        ),
+
+Widget _backButton() => Positioned(
+  top: 40,
+  left: 8,
+  child: SizedBox(
+    height: 50.0,
+    width: 50.0,
+    child: FloatingActionButton(
+      heroTag: Object(),
+      onPressed: () {
+        BlocProvider.of<PushUpCounter>(context).reset();
+        Navigator.of(context).pop();
+      },
+      backgroundColor: Colors.orange, // Cambiado a blanco
+      child: const Icon(
+        Icons.arrow_back_ios_outlined,
+        size: 20,
+        color: Colors.white, // Cambiado a negro para contrastar con el fondo blanco
       ),
-    );
-   }
+    ),
+  ),
+);
 
-  Widget _backButton() => Positioned(
-        top: 40,
-        left: 8,
-        child: SizedBox(
-          height: 50.0,
-          width: 50.0,
-          child: FloatingActionButton(
-            heroTag: Object(),
-            onPressed: () {
-              BlocProvider.of<PushUpCounter>(context).reset();
-              Navigator.of(context).pop();
+Widget _detectionViewModeToggle() => Positioned(
+  bottom: 8,
+  left: 8,
+  child: SizedBox(
+    height: 50.0,
+    width: 50.0,
+    child: FloatingActionButton(
+      heroTag: Object(),
+      onPressed: widget.onDetectorViewModeChanged,
+      backgroundColor: Colors.orange, // Cambiado a blanco
+      child: const Icon(
+        Icons.photo_library_outlined,
+        size: 25,
+        color: Colors.white, // Cambiado a negro para contrastar con el fondo blanco
+      ),
+    ),
+  ),
+);
 
-            },
-            backgroundColor: Colors.black54,
-            child: const Icon(
-              Icons.arrow_back_ios_outlined,
-              size: 20,
-            ),
-          ),
-        ),
-      );
+Widget _switchLiveCameraToggle() => Positioned(
+  bottom: 8,
+  right: 8,
+  child: SizedBox(
+    height: 50.0,
+    width: 50.0,
+    child: FloatingActionButton(
+      heroTag: Object(),
+      onPressed: _switchLiveCamera,
+      backgroundColor: Colors.orange, // Cambiado a blanco
+      child: Icon(
+        Platform.isIOS
+            ? Icons.flip_camera_ios_outlined
+            : Icons.flip_camera_android_outlined,
+        size: 25,
+        color: Colors.white, // Cambiado a negro para contrastar con el fondo blanco
+      ),
+    ),
+  ),
+);
 
-  Widget _detectionViewModeToggle() => Positioned(
-        bottom: 8,
-        left: 8,
-        child: SizedBox(
-          height: 50.0,
-          width: 50.0,
-          child: FloatingActionButton(
-            heroTag: Object(),
-            onPressed: widget.onDetectorViewModeChanged,
-            backgroundColor: Colors.black54,
-            child: const Icon(
-              Icons.photo_library_outlined,
-              size: 25,
-            ),
-          ),
-        ),
-      );
-
-  Widget _switchLiveCameraToggle() => Positioned(
-        bottom: 8,
-        right: 8,
-        child: SizedBox(
-          height: 50.0,
-          width: 50.0,
-          child: FloatingActionButton(
-            heroTag: Object(),
-            onPressed: _switchLiveCamera,
-            backgroundColor: Colors.black54,
-            child: Icon(
-              Platform.isIOS
-                  ? Icons.flip_camera_ios_outlined
-                  : Icons.flip_camera_android_outlined,
-              size: 25,
-            ),
-          ),
-        ),
-      );
 
   Widget _zoomControl() => Positioned(
         bottom: 16,

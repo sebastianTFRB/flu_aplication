@@ -13,16 +13,25 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context)=> PushUpCounter(),
+      create: (context) => PushUpCounter(),
       child: MaterialApp(
         title: 'Material App',
-        home: SplashScreen()
-     )
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          appBarTheme: const AppBarTheme(
+            backgroundColor: Colors.blue,
+            foregroundColor: Colors.white,
+          ),
+          textTheme: const TextTheme(
+            bodyMedium: TextStyle(color: Colors.black87),
+          ),
+        ),
+        debugShowCheckedModeBanner: false,
+        home: SplashScreen(),
+      ),
     );
   }
 }
-
-
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -34,6 +43,12 @@ class Home extends StatelessWidget {
         title: const Text('Google ML Kit Demo App'),
         centerTitle: true,
         elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.menu),
+          onPressed: () {
+            // Acción al presionar el botón
+          },
+        ),
       ),
       body: SafeArea(
         child: Center(
@@ -43,7 +58,8 @@ class Home extends StatelessWidget {
               child: Column(
                 children: [
                   ExpansionTile(
-                    title: const Text('Vision APIs'),
+                    title: const Text('Vision APIs', style: TextStyle(fontWeight: FontWeight.bold)),
+                    leading: const Icon(Icons.visibility, color: Colors.blue),
                     children: [
                       CustomCard('Pose Detection', PoseDetectorView()),
                     ],
@@ -55,7 +71,6 @@ class Home extends StatelessWidget {
         ),
       ),
     );
-    
   }
 }
 
@@ -69,6 +84,9 @@ class CustomCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
       elevation: 5,
       margin: const EdgeInsets.only(bottom: 10),
       child: ListTile(
@@ -77,17 +95,21 @@ class CustomCard extends StatelessWidget {
           _label,
           style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
+        trailing: const Icon(Icons.arrow_forward, color: Colors.white),
         onTap: () {
           if (!featureCompleted) {
             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content:
-                    Text('This feature has not been implemented yet')));
+              content: Text('This feature has not been implemented yet'),
+            ));
           } else {
             Navigator.push(
-                context, MaterialPageRoute(builder: (context) => _viewPage));
+              context,
+              MaterialPageRoute(builder: (context) => _viewPage),
+            );
           }
         },
       ),
     );
   }
 }
+

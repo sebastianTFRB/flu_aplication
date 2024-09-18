@@ -39,4 +39,5 @@ flutter:
 
   assets:
     - assets/push-up-animation.json
+    - assets/background_image.jpg
   
